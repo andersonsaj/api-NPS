@@ -2,13 +2,13 @@ import request from 'supertest';
 import { createConnection } from 'typeorm';
 import app from '../app';
 
-describe('Surverys', () => {
+describe('Surveys', () => {
   beforeAll(async () => {
     const connection = await createConnection();
     await connection.runMigrations();
   });
 
-  it('Should be able to create a new survery', async () => {
+  it('Should be able to create a new survey', async () => {
     const response = await request(app).post('/surveys').send({
       title: 'Title Example',
       description: 'Description Example',
@@ -18,7 +18,7 @@ describe('Surverys', () => {
     expect(response.body).toHaveProperty('id');
   });
 
-  it('Should be able to get all surverys', async () => {
+  it('Should be able to get all surveys', async () => {
     await request(app).post('/surveys').send({
       title: 'Title Example2',
       description: 'Description Example2',
