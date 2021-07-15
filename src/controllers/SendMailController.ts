@@ -3,6 +3,7 @@ import { getCustomRepository } from 'typeorm';
 import { SurveyRepository } from '../repositories/SurveyRepository ';
 import SurveysUsersRepository from '../repositories/SurveysUsersRepository';
 import { UserRepository } from '../repositories/UserRepository';
+import SenMAilService from '../services/SendMailServices';
 
 class SendMailController {
   async execute(request: Request, response: Response) {
@@ -20,11 +21,11 @@ class SendMailController {
       });
     }
 
-    const surveyAlreadyExists = await surveysRepository.findOne({
+    const survey = await surveysRepository.findOne({
       id: survey_id,
     });
 
-    if (!surveyAlreadyExists) {
+    if (!survey) {
       return response.status(400).json({
         error: 'Survey does not exists!',
       });
@@ -36,6 +37,8 @@ class SendMailController {
     });
 
     await surveysUsersRepository.save(surveyUser);
+
+    await SenMAilService.execute(email, survey.title, survey.description);
 
     return response.json(surveyUser);
   }
